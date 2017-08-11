@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TaskManager</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/mainstyle.css">
+</head>
+<body>
+    <nav class="navbar navbar-inverse sidebar" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Tasks</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+                    <li ><a href="#">Create<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-user"></span></a></li>
+                    <li ><a href="#">Settings<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-envelope"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-sm-4">
+
+        </div>
+        <div class="col-sm-8">
+            <div class="form-group">
+                <label>Name:</label>
+                <label id="name"></label>
+            </div>
+            <div class="form-group">
+                <label>Description:</label>
+                <label class="descr"></label>
+            </div>
+            <div class="form-group">
+                <label>Date start:</label>
+                <label class="dates"></label>
+            </div>
+            <div class="form-group">
+                <label>Plan Time:</label>
+                <label class="plTime"></label>
+            </div>
+            <div class="form-group">
+                <label>Fact Time:</label>
+                <label class="factTime"></label>
+            </div>
+        </div>
+    </div>
+    <script>
+        require('./renderer')
+    </script>
+</body>
+</html>
