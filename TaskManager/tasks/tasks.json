@@ -1,3 +1,1 @@
-[{"id": 0, "name": "name", "description": "descr", "create_date": "01.01.2017", "finish_date": null, "plan_time": null, "fact_time": null},
-  {"id": 1, "name": "name1", "description": "descr1", "create_date": "01.01.2017", "finish_date": null, "plan_time": null, "fact_time": null},
-  {"id": 1, "name": "name1", "description": "descr1", "create_date": null, "finish_date": null, "plan_time": null, "fact_time": null}]
+[{"id":0,"name":"name","description":"descrgr","create_date":"01.01.2017","finish_date":"","plan_time":"","fact_time":""},{"id":1,"name":"name1","description":"descr1","create_date":"01.01.2017","finish_date":null,"plan_time":null,"fact_time":null},{"id":1,"name":"name1","description":"descr1","create_date":null,"finish_date":null,"plan_time":null,"fact_time":null}]
