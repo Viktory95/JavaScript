@@ -28,7 +28,11 @@ const $btnFinDate = $('#btnFinDate')
 const $btnPlTime = $('#btnPlTime')
 const $btnFactTime = $('#btnFactTime')
 const $btnSave = $('#btnSave')
+const $btnPlus = $('#btnFactTimePlus')
 
+let stValue;
+
+//initialize start data from file
 ipc.on('file-opened', (event, file, content) => {
     let id = null
     let name = null
@@ -79,14 +83,14 @@ ipc.on('file-opened', (event, file, content) => {
             liFactTime.className = 'liFactTime'
 
             //set attributes
-            liName.innerText =name
+            liName.innerText = name
             liDescription.innerText = description
             liStDate.innerText = create_date
             liFinDate.innerText = finish_date
             liPlTime.innerText = plan_time
             liFactTime.innerText = fact_time
 
-            //add lis from ul
+            //add li from ul
             ul.append(liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
 
             //add ul from div
@@ -97,7 +101,7 @@ ipc.on('file-opened', (event, file, content) => {
             //add div from main form
             $col4.append(div)
 
-            //set data from right panel
+            //set data from right panel, when user chick on left item
             //TODO: liStDate.innerText === 'null' doesn't work
             div.addEventListener('click', () => {
                 allInputToLabel()
@@ -125,7 +129,7 @@ $btnStDate.addEventListener('click', replaseInput)
 //change label to input and input to label
 function replaseInput() {
     let elemId = this.id.substring(3, 4).toLowerCase() + this.id.substring(4, this.id.length)
-    //is label
+    //element is LABEL
     if(this.className === 'btnChange'){
         let inp = document.createElement('input')
         inp.className = 'form-control'
@@ -165,8 +169,9 @@ function replaseInput() {
 
         this.className = 'btnSave'
     }
-    //is input
+    //element is INPUT
     else {
+        //change input on label
         let inp = document.createElement('label')
         inp.id = elemId
         switch (elemId) {
@@ -206,28 +211,89 @@ function replaseInput() {
     }
 }
 
+//add fact hours
+//TODO:
+$btnPlus.addEventListener('click', () => {
+    stValue = $factTime.innerText
+    //element is LABEL
+    if($btnPlus.className === 'btnChange'){
+    let inp = document.createElement('input')
+    inp.className = 'form-control'
+    inp.id = $factTime.id
+    $factTime.replaceWith(inp)
+    $factTime = $('#factTime')
+
+    $btnPlus.className = 'btnSave'
+    }
+//element is INPUT
+else {
+    //change input on label
+    let inp = document.createElement('label')
+    inp.id = $factTime.id
+    inp.innerText = stValue + $factTime.value
+    $factTime.replaceWith(inp)
+    $factTime = $('#factTime')
+
+    $btnPlus.className = 'btnChange'
+}
+})
+
+//save button listener
 $btnSave.addEventListener('click', () => {
     allInputToLabel()
 
+    //save in file
     let content = fs.readFileSync(file)
     let json = JSON.parse(content)
 
     for(let elNum = 0; elNum < json.length; elNum++){
-    if(json[elNum]['id'].toString() === $col8.id){
-        json[elNum]['name'] = $name.innerText
-        json[elNum]['description'] = $descr.innerText
-        json[elNum]['create_date'] = $stDate.innerText
-        json[elNum]['finish_date'] = $finDate.innerText
-        json[elNum]['plan_time'] = $plTime.innerText
-        json[elNum]['fact_time'] = $factTime.innerText
+        if(json[elNum]['id'].toString() === $col8.id){
+            json[elNum]['name'] = $name.innerText
+            json[elNum]['description'] = $descr.innerText
+            json[elNum]['create_date'] = $stDate.innerText
+            json[elNum]['finish_date'] = $finDate.innerText
+            json[elNum]['plan_time'] = $plTime.innerText
+            json[elNum]['fact_time'] = $factTime.innerText
+        }
     }
-}
 
-fs.writeFile(file, JSON.stringify(json), 'utf8', function(){
-    console.log('Data saved.')
-    //TODO: remove child elements from col4
-    //TODO: openFile
-})
+    //set data to left item
+    for(let elNum=0; elNum<$col4.children.length; elNum++) {
+        //get div by id
+        if($col4.children[elNum].id === $col8.id){
+            //get first ul
+            let ul = $col4.children[elNum].children[0]
+            //get all li elements
+            for(let liElNum=0; liElNum<ul.children.length; liElNum++) {
+                switch (ul.children[liElNum].className) {
+                    case 'liName':
+                        ul.children[liElNum].innerText = $name.innerText
+                        break
+                    case 'liDescription':
+                        ul.children[liElNum].innerText = $descr.innerText
+                        break
+                    case 'liStDate':
+                        ul.children[liElNum].innerText = $stDate.innerText
+                        break
+                    case 'liFinDate':
+                        ul.children[liElNum].innerText = $finDate.innerText
+                        $col4.children[elNum].className = $finDate.innerText == null || $finDate.innerText === '' ? 'elemActiv' : 'elemPassiv'
+                        break
+                    case 'liPlTime':
+                        ul.children[liElNum].innerText = $plTime.innerText
+                        break
+                    case 'liFactTime':
+                        ul.children[liElNum].innerText = $factTime.innerText
+                        break
+                }
+            }
+        }
+    }
+
+    //save file task.json
+    fs.writeFile(file, JSON.stringify(json), 'utf8', function(){
+        console.log('Data saved.')
+    })
 })
 
 function allInputToLabel() {
