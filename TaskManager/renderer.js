@@ -28,9 +28,8 @@ const $btnFinDate = $('#btnFinDate')
 const $btnPlTime = $('#btnPlTime')
 const $btnFactTime = $('#btnFactTime')
 const $btnSave = $('#btnSave')
-const $btnPlus = $('#btnFactTimePlus')
 
-let stValue;
+const $btnCreate = $('#create')
 
 //initialize start data from file
 ipc.on('file-opened', (event, file, content) => {
@@ -102,21 +101,14 @@ ipc.on('file-opened', (event, file, content) => {
             $col4.append(div)
 
             //set data from right panel, when user chick on left item
-            //TODO: liStDate.innerText === 'null' doesn't work
             div.addEventListener('click', () => {
                 allInputToLabel()
-                $name.innerText = liName.innerText
-            $descr.innerText = liDescription.innerText
-            $stDate.innerText = liStDate.innerText === 'null' ? new Date().toJSON().slice(0,10).replace(/-/g,'.') : liStDate.innerText
-            $finDate.innerText = liFinDate.innerText
-            $plTime.innerText = liPlTime.innerText
-            $factTime.innerText = liFactTime.innerText
-            $col8.id = div.id
-    })
+                setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+            })
 
-    break
-}
-})
+            break
+        }
+    })
 })
 
 $btnName.addEventListener('click', replaseInput)
@@ -211,33 +203,6 @@ function replaseInput() {
     }
 }
 
-//add fact hours
-//TODO:
-$btnPlus.addEventListener('click', () => {
-    stValue = $factTime.innerText
-    //element is LABEL
-    if($btnPlus.className === 'btnChange'){
-    let inp = document.createElement('input')
-    inp.className = 'form-control'
-    inp.id = $factTime.id
-    $factTime.replaceWith(inp)
-    $factTime = $('#factTime')
-
-    $btnPlus.className = 'btnSave'
-    }
-//element is INPUT
-else {
-    //change input on label
-    let inp = document.createElement('label')
-    inp.id = $factTime.id
-    inp.innerText = stValue + $factTime.value
-    $factTime.replaceWith(inp)
-    $factTime = $('#factTime')
-
-    $btnPlus.className = 'btnChange'
-}
-})
-
 //save button listener
 $btnSave.addEventListener('click', () => {
     allInputToLabel()
@@ -245,6 +210,8 @@ $btnSave.addEventListener('click', () => {
     //save in file
     let content = fs.readFileSync(file)
     let json = JSON.parse(content)
+
+    let flag = false
 
     for(let elNum = 0; elNum < json.length; elNum++){
         if(json[elNum]['id'].toString() === $col8.id){
@@ -254,7 +221,19 @@ $btnSave.addEventListener('click', () => {
             json[elNum]['finish_date'] = $finDate.innerText
             json[elNum]['plan_time'] = $plTime.innerText
             json[elNum]['fact_time'] = $factTime.innerText
+            flag = true
         }
+    }
+
+    //add new element, is it does not exist
+    if(!flag){
+        json.push({"id":$col8.id,
+            "name":$name.innerText,
+            "description":$descr.innerText,
+            "create_date":$stDate.innerText,
+            "finish_date":$finDate.innerText,
+            "plan_time":$plTime.innerText,
+            "fact_time":$factTime.innerText})
     }
 
     //set data to left item
@@ -295,6 +274,60 @@ $btnSave.addEventListener('click', () => {
         console.log('Data saved.')
     })
 })
+
+$btnCreate.addEventListener('click', () => {
+    //create div elemet
+    let div = document.createElement('div')
+    let ul = document.createElement('ul')
+    ul.className = 'team'
+    let liName = document.createElement('li')
+    liName.className = 'liName'
+    let liDescription = document.createElement('li')
+    liDescription.className = 'liDescription'
+    let liStDate = document.createElement('li')
+    liStDate.className = 'liStDate'
+    let liFinDate = document.createElement('li')
+    liFinDate.className = 'liFinDate'
+    let liPlTime = document.createElement('li')
+    liPlTime.className = 'liPlTime'
+    let liFactTime = document.createElement('li')
+    liFactTime.className = 'liFactTime'
+
+    //set attributes
+    liName.innerText = 'Новая задача'
+    liStDate.innerText = new Date().toJSON().slice(0,10).replace(/-/g,'.')
+
+    //add li from ul
+    ul.append(liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+
+    //add ul from div
+    div.className = 'elemActiv'
+    div.id = $col4.children.length+1
+    div.append(ul)
+
+    //add div from main form
+    $col4.append(div)
+
+    //set data from right panel, when user chick on left item
+    //TODO: liStDate.innerText === 'null' doesn't work
+    div.addEventListener('click', () => {
+        allInputToLabel()
+        setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+    })
+
+    setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+})
+
+function setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime) {
+    $name.innerText = liName.innerText
+    $descr.innerText = liDescription.innerText
+    //TODO: liStDate.innerText === 'null' doesn't work
+    $stDate.innerText = liStDate.innerText === 'null' ? new Date().toJSON().slice(0,10).replace(/-/g,'.') : liStDate.innerText
+    $finDate.innerText = liFinDate.innerText
+    $plTime.innerText = liPlTime.innerText
+    $factTime.innerText = liFactTime.innerText
+    $col8.id = div.id
+}
 
 function allInputToLabel() {
     if($name.tagName === 'INPUT'){

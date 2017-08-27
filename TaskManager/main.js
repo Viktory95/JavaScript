@@ -3,10 +3,8 @@
  */
 const electron = require('electron')
 const {app, BrowserWindow} = electron
-const remote = electron.remote
 const path = require('path')
 const fs = require('fs')
-const $ = selector => document.querySelector(selector)
 
 let win = null
 
