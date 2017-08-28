@@ -28,6 +28,7 @@ const $btnFinDate = $('#btnFinDate')
 const $btnPlTime = $('#btnPlTime')
 const $btnFactTime = $('#btnFactTime')
 const $btnSave = $('#btnSave')
+const $btnDelete = $('#btnDelete')
 
 const $btnCreate = $('#create')
 
@@ -207,7 +208,7 @@ function replaseInput() {
 $btnSave.addEventListener('click', () => {
     allInputToLabel()
 
-    //save in file
+    //read from file
     let content = fs.readFileSync(file)
     let json = JSON.parse(content)
 
@@ -302,6 +303,7 @@ $btnCreate.addEventListener('click', () => {
 
     //add ul from div
     div.className = 'elemActiv'
+    //TODO: get max value id from $col4.children
     div.id = $col4.children.length+1
     div.append(ul)
 
@@ -316,6 +318,32 @@ $btnCreate.addEventListener('click', () => {
     })
 
     setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+})
+
+$btnDelete.addEventListener('click', () => {
+    //read from file
+    let content = fs.readFileSync(file)
+    let json = JSON.parse(content)
+
+    for(let elNum = 0; elNum < json.length; elNum++){
+        if(json[elNum]['id'].toString() === $col8.id){
+            //TODO: element becoms null
+            delete json[elNum]
+        }
+    }
+
+    //delete from left item
+    for(let elNum=0; elNum<$col4.children.length; elNum++) {
+        //get div by id
+        if ($col4.children[elNum].id === $col8.id) {
+            $col4.children[elNum].remove()
+        }
+    }
+
+    //save file task.json
+    fs.writeFile(file, JSON.stringify(json), 'utf8', function(){
+        console.log('Data saved.')
+    })
 })
 
 function setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime) {
