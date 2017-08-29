@@ -10,6 +10,7 @@ const marked = require('marked')
 const remote = electron.remote
 
 const file = path.resolve('./tasks/tasks.json')
+const size = path.resolve('./tasks/size.json')
 
 const $col4 = $('.col-sm-4')
 
@@ -71,12 +72,14 @@ ipc.on('file-opened', (event, file, content) => {
             ul.className = 'team'
             let liName = document.createElement('li')
             liName.className = 'liName'
+
             let liDescription = document.createElement('li')
             liDescription.className = 'liDescription'
             let liStDate = document.createElement('li')
             liStDate.className = 'liStDate'
             let liFinDate = document.createElement('li')
             liFinDate.className = 'liFinDate'
+
             let liPlTime = document.createElement('li')
             liPlTime.className = 'liPlTime'
             let liFactTime = document.createElement('li')
@@ -303,8 +306,10 @@ $btnCreate.addEventListener('click', () => {
 
     //add ul from div
     div.className = 'elemActiv'
-    //TODO: get max value id from $col4.children
-    div.id = $col4.children.length+1
+    let content = fs.readFileSync(size)
+    let json = JSON.parse(content)
+
+    div.id = json[0]['size'] + 1
     div.append(ul)
 
     //add div from main form
@@ -318,17 +323,23 @@ $btnCreate.addEventListener('click', () => {
     })
 
     setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+
+    json[0]['size'] = json[0]['size']+1
+    //save file task.json
+    fs.writeFile(size, JSON.stringify(json), 'utf8', function(){
+        console.log('Data saved.')
+    })
 })
 
 $btnDelete.addEventListener('click', () => {
     //read from file
     let content = fs.readFileSync(file)
     let json = JSON.parse(content)
+    let json2 = JSON.parse('[]')
 
     for(let elNum = 0; elNum < json.length; elNum++){
-        if(json[elNum]['id'].toString() === $col8.id){
-            //TODO: element becoms null
-            delete json[elNum]
+        if(json[elNum]['id'].toString() != $col8.id){
+            json2.push(json[elNum])
         }
     }
 
@@ -341,7 +352,7 @@ $btnDelete.addEventListener('click', () => {
     }
 
     //save file task.json
-    fs.writeFile(file, JSON.stringify(json), 'utf8', function(){
+    fs.writeFile(file, JSON.stringify(json2), 'utf8', function(){
         console.log('Data saved.')
     })
 })
