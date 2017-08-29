@@ -37,8 +37,6 @@ const $btnCreate = $('#create')
 ipc.on('file-opened', (event, file, content) => {
     let id = null
     let name = null
-    let description = null
-    let create_date = null
     let finish_date = null
     let plan_time = null
     let fact_time = null
@@ -50,12 +48,6 @@ ipc.on('file-opened', (event, file, content) => {
             break
         case 'name':
             name = v
-            break
-        case 'description':
-            description = v
-            break
-        case 'create_date':
-            create_date = v
             break
         case 'finish_date':
             finish_date = v
@@ -72,14 +64,6 @@ ipc.on('file-opened', (event, file, content) => {
             ul.className = 'team'
             let liName = document.createElement('li')
             liName.className = 'liName'
-
-            let liDescription = document.createElement('li')
-            liDescription.className = 'liDescription'
-            let liStDate = document.createElement('li')
-            liStDate.className = 'liStDate'
-            let liFinDate = document.createElement('li')
-            liFinDate.className = 'liFinDate'
-
             let liPlTime = document.createElement('li')
             liPlTime.className = 'liPlTime'
             let liFactTime = document.createElement('li')
@@ -87,14 +71,11 @@ ipc.on('file-opened', (event, file, content) => {
 
             //set attributes
             liName.innerText = name
-            liDescription.innerText = description
-            liStDate.innerText = create_date
-            liFinDate.innerText = finish_date
             liPlTime.innerText = plan_time
             liFactTime.innerText = fact_time
 
             //add li from ul
-            ul.append(liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+            ul.append(liName, liPlTime, liFactTime)
 
             //add ul from div
             div.className = finish_date == null || finish_date === '' ? 'elemActiv' : 'elemPassiv'
@@ -107,7 +88,7 @@ ipc.on('file-opened', (event, file, content) => {
             //set data from right panel, when user chick on left item
             div.addEventListener('click', () => {
                 allInputToLabel()
-                setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+                setDataToRightSide(div, liName, liPlTime, liFactTime)
             })
 
             break
@@ -316,13 +297,12 @@ $btnCreate.addEventListener('click', () => {
     $col4.append(div)
 
     //set data from right panel, when user chick on left item
-    //TODO: liStDate.innerText === 'null' doesn't work
     div.addEventListener('click', () => {
         allInputToLabel()
-        setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+        setDataToRightSide(div, liName, liPlTime, liFactTime)
     })
 
-    setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+    setDataToRightSide(div, liName, liPlTime, liFactTime)
 
     json[0]['size'] = json[0]['size']+1
     //save file task.json
@@ -357,15 +337,21 @@ $btnDelete.addEventListener('click', () => {
     })
 })
 
-function setDataToRightSide(div, liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime) {
-    $name.innerText = liName.innerText
-    $descr.innerText = liDescription.innerText
-    //TODO: liStDate.innerText === 'null' doesn't work
-    $stDate.innerText = liStDate.innerText === 'null' ? new Date().toJSON().slice(0,10).replace(/-/g,'.') : liStDate.innerText
-    $finDate.innerText = liFinDate.innerText
-    $plTime.innerText = liPlTime.innerText
-    $factTime.innerText = liFactTime.innerText
-    $col8.id = div.id
+function setDataToRightSide(div, liName, liPlTime, liFactTime) {
+    let content = fs.readFileSync(file)
+    let json = JSON.parse(content)
+
+    for(let elNum = 0; elNum < json.length; elNum++){
+        if(json[elNum]['id'].toString() === div.id){
+            $name.innerText = liName.innerText
+            $descr.innerText = json[elNum]['description']
+            $stDate.innerText = json[elNum]['create_date']
+            $finDate.innerText = json[elNum]['finish_date']
+            $plTime.innerText = liPlTime.innerText
+            $factTime.innerText = liFactTime.innerText
+            $col8.id = div.id
+        }
+    }
 }
 
 function allInputToLabel() {
