@@ -88,7 +88,7 @@ ipc.on('file-opened', (event, file, content) => {
             //set data from right panel, when user chick on left item
             div.addEventListener('click', () => {
                 allInputToLabel()
-                setDataToRightSide(div, liName, liPlTime, liFactTime)
+                setDataToRightSide(div)
             })
 
             break
@@ -233,16 +233,6 @@ $btnSave.addEventListener('click', () => {
                     case 'liName':
                         ul.children[liElNum].innerText = $name.innerText
                         break
-                    case 'liDescription':
-                        ul.children[liElNum].innerText = $descr.innerText
-                        break
-                    case 'liStDate':
-                        ul.children[liElNum].innerText = $stDate.innerText
-                        break
-                    case 'liFinDate':
-                        ul.children[liElNum].innerText = $finDate.innerText
-                        $col4.children[elNum].className = $finDate.innerText == null || $finDate.innerText === '' ? 'elemActiv' : 'elemPassiv'
-                        break
                     case 'liPlTime':
                         ul.children[liElNum].innerText = $plTime.innerText
                         break
@@ -250,6 +240,7 @@ $btnSave.addEventListener('click', () => {
                         ul.children[liElNum].innerText = $factTime.innerText
                         break
                 }
+                $col4.children[elNum].className = $finDate.innerText == null || $finDate.innerText === '' ? 'elemActiv' : 'elemPassiv'
             }
         }
     }
@@ -267,12 +258,6 @@ $btnCreate.addEventListener('click', () => {
     ul.className = 'team'
     let liName = document.createElement('li')
     liName.className = 'liName'
-    let liDescription = document.createElement('li')
-    liDescription.className = 'liDescription'
-    let liStDate = document.createElement('li')
-    liStDate.className = 'liStDate'
-    let liFinDate = document.createElement('li')
-    liFinDate.className = 'liFinDate'
     let liPlTime = document.createElement('li')
     liPlTime.className = 'liPlTime'
     let liFactTime = document.createElement('li')
@@ -280,10 +265,9 @@ $btnCreate.addEventListener('click', () => {
 
     //set attributes
     liName.innerText = 'Новая задача'
-    liStDate.innerText = new Date().toJSON().slice(0,10).replace(/-/g,'.')
 
     //add li from ul
-    ul.append(liName, liDescription, liStDate, liFinDate, liPlTime, liFactTime)
+    ul.append(liName, liPlTime, liFactTime)
 
     //add ul from div
     div.className = 'elemActiv'
@@ -299,16 +283,35 @@ $btnCreate.addEventListener('click', () => {
     //set data from right panel, when user chick on left item
     div.addEventListener('click', () => {
         allInputToLabel()
-        setDataToRightSide(div, liName, liPlTime, liFactTime)
+        setDataToRightSide(div)
     })
-
-    setDataToRightSide(div, liName, liPlTime, liFactTime)
 
     json[0]['size'] = json[0]['size']+1
     //save file task.json
     fs.writeFile(size, JSON.stringify(json), 'utf8', function(){
         console.log('Data saved.')
     })
+
+    //read from file
+    content = fs.readFileSync(file)
+    json = JSON.parse(content)
+
+    //TODO: create_date
+    //add new element to tasks.json
+    json.push({"id":div.id,
+        "name":"Новая задача",
+        "description":null,
+        "create_date":null,
+        "finish_date":null,
+        "plan_time":null,
+        "fact_time":null})
+
+    //save file task.json
+    fs.writeFile(file, JSON.stringify(json), 'utf8', function(){
+        console.log('Data saved.')
+    })
+
+    setDataToRightSide(div)
 })
 
 $btnDelete.addEventListener('click', () => {
@@ -337,18 +340,18 @@ $btnDelete.addEventListener('click', () => {
     })
 })
 
-function setDataToRightSide(div, liName, liPlTime, liFactTime) {
+function setDataToRightSide(div) {
     let content = fs.readFileSync(file)
     let json = JSON.parse(content)
 
     for(let elNum = 0; elNum < json.length; elNum++){
         if(json[elNum]['id'].toString() === div.id){
-            $name.innerText = liName.innerText
+            $name.innerText = json[elNum]['name']
             $descr.innerText = json[elNum]['description']
             $stDate.innerText = json[elNum]['create_date']
             $finDate.innerText = json[elNum]['finish_date']
-            $plTime.innerText = liPlTime.innerText
-            $factTime.innerText = liFactTime.innerText
+            $plTime.innerText = json[elNum]['plan_time']
+            $factTime.innerText = json[elNum]['fact_time']
             $col8.id = div.id
         }
     }
