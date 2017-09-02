@@ -10,9 +10,10 @@ let win = null
 
 app.on('ready', () => {
     win = new BrowserWindow({width:900, height: 600})
+    //win.maximize()
     win.loadURL('file://' + path.join(__dirname,'index.html'))
 
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 
     win.webContents.on('did-finish-load', () => {
         openFile()

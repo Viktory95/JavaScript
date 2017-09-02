@@ -33,6 +33,10 @@ const $btnDelete = $('#btnDelete')
 
 const $btnCreate = $('#create')
 
+const namePrev = 'Название задачи: '
+const planPrev = 'Плановое время: '
+const factPrev = 'Фактическое время: '
+
 //initialize start data from file
 ipc.on('file-opened', (event, file, content) => {
     let id = null
@@ -70,9 +74,9 @@ ipc.on('file-opened', (event, file, content) => {
             liFactTime.className = 'liFactTime'
 
             //set attributes
-            liName.innerText = name
-            liPlTime.innerText = plan_time
-            liFactTime.innerText = fact_time
+            liName.innerText = namePrev + name
+            liPlTime.innerText = planPrev + plan_time
+            liFactTime.innerText = factPrev + fact_time
 
             //add li from ul
             ul.append(liName, liPlTime, liFactTime)
@@ -231,13 +235,13 @@ $btnSave.addEventListener('click', () => {
             for(let liElNum=0; liElNum<ul.children.length; liElNum++) {
                 switch (ul.children[liElNum].className) {
                     case 'liName':
-                        ul.children[liElNum].innerText = $name.innerText
+                        ul.children[liElNum].innerText = namePrev + $name.innerText
                         break
                     case 'liPlTime':
-                        ul.children[liElNum].innerText = $plTime.innerText
+                        ul.children[liElNum].innerText = planPrev + $plTime.innerText
                         break
                     case 'liFactTime':
-                        ul.children[liElNum].innerText = $factTime.innerText
+                        ul.children[liElNum].innerText = factPrev + $factTime.innerText
                         break
                 }
                 $col4.children[elNum].className = $finDate.innerText == null || $finDate.innerText === '' ? 'elemActiv' : 'elemPassiv'
@@ -264,7 +268,9 @@ $btnCreate.addEventListener('click', () => {
     liFactTime.className = 'liFactTime'
 
     //set attributes
-    liName.innerText = 'Новая задача'
+    liName.innerText = namePrev + 'Новая задача'
+    liPlTime.innerText = planPrev
+    liFactTime.innerText = factPrev
 
     //add li from ul
     ul.append(liName, liPlTime, liFactTime)
@@ -279,12 +285,6 @@ $btnCreate.addEventListener('click', () => {
 
     //add div from main form
     $col4.append(div)
-
-    //set data from right panel, when user chick on left item
-    div.addEventListener('click', () => {
-        allInputToLabel()
-        setDataToRightSide(div)
-    })
 
     json[0]['size'] = json[0]['size']+1
     //save file task.json
@@ -311,7 +311,15 @@ $btnCreate.addEventListener('click', () => {
         console.log('Data saved.')
     })
 
-    setDataToRightSide(div)
+
+    //set data from right panel, when user chick on left item
+    div.addEventListener('click', () => {
+        allInputToLabel()
+        setDataToRightSide(div)
+    })
+
+    //TODO: синхронизация переноса данных в правую часть и сохранения в файл
+    div.click()
 })
 
 $btnDelete.addEventListener('click', () => {
