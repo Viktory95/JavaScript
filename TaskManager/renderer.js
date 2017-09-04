@@ -111,7 +111,7 @@ $btnStDate.addEventListener('click', replaseInput)
 function replaseInput() {
     let elemId = this.id.substring(3, 4).toLowerCase() + this.id.substring(4, this.id.length)
     //element is LABEL
-    if(this.className === 'btnChange'){
+    if(this.className === 'el el-edit'){
         let inp = document.createElement('input')
         inp.className = 'form-control'
         inp.id = elemId
@@ -148,7 +148,7 @@ function replaseInput() {
                 break;
         }
 
-        this.className = 'btnSave'
+        this.className = 'el el-ok-circle'
     }
     //element is INPUT
     else {
@@ -188,7 +188,7 @@ function replaseInput() {
                 break;
         }
 
-        this.className = 'btnChange'
+        this.className = 'el el-edit'
     }
 }
 

@@ -1,5 +1,7 @@
 body,html{
     height: 100%;
+    background: #777;
+    overflow:hidden;
 }
 
 /* remove outer padding */
@@ -191,4 +193,19 @@ section{
 ul {
     list-style-type: none;
     padding: 0%;
+}
+label {
+    width: 90%;
+}
+
+form-control {
+    width: 70%;
+}
+
+.el {
+    background: indianred;
+    width: 35px;
+    height: 25px;
+    border-radius: 10px;
+    border-color: #ce8483;
 }
