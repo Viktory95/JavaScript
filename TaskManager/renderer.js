@@ -113,7 +113,7 @@ function replaseInput() {
     //element is LABEL
     if(this.className === 'el el-edit'){
         let inp = document.createElement('input')
-        inp.className = 'form-control'
+        inp.className = 'input1'
         inp.id = elemId
         switch (elemId) {
             case 'name':
