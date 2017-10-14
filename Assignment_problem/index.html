@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-8">
+        <div class="form-group">
+            <label>Размерность матрицы:</label>
+            <input class="form-control" id="matrSize">
+            <button type="button" class="btn btn-default" id="inptBtn">Ввести значения</button>
+            <button type="button" class="btn btn-default" id="calcBtn">Решить</button>
+            <button type="button" class="btn btn-default" id="removeBtn">Очистить</button>
+        </div>
+    </div>
+    </div>
+    <table class="table table-striped" id="table">
+        <tbody id="matr">
+        </tbody>
+    </table>
+    <script>
+        require('./renderer')
+    </script>
+</body>
+</html>

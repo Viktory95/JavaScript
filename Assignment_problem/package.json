@@ -1,0 +1,21 @@
+{
+  "name": "Assignment_problem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron index.js",
+    "package": "",
+    "build": "electron-packager . Assignment_problem"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "asar": "^0.13.0",
+    "electron": "^1.6.11",
+    "electron-packager": "^8.7.2",
+    "fs": "0.0.1-security",
+    "marked": "^0.3.6",
+    "path": "^0.12.7"
+  }
+}
