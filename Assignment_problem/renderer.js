@@ -6,6 +6,9 @@ const $ = selector => document.querySelector(selector)
 const marked = require('marked')
 const fs = require('fs')
 const path = require('path')
+const remote = electron.remote
+const ipc = electron.ipcRenderer
+const mainProcess = remote.require('./index')
 
 const $matrSize = $('#matrSize')
 const $inptBtn = $('#inptBtn')
@@ -36,27 +39,31 @@ $fromFileBtn.addEventListener('click', () => {
     //инициализация полей ввода для матрицы
     $inptBtn.click()
 
-//чтение из файла
-fs.readFile(dataFile, 'utf8', function(err, data) {
-    if (err) throw err;
-    let numerics = data.split(' ')
-    let row = 0
-    let col = 0
-    for (let i = 0; i < numerics.length; i++) {
-        if(i >= matrSize && (i%matrSize) == 0){
-            //console.log('i = ' + i)
-            row++
-            col = 0
-        }
-        //console.log(row + '_' + col)
-        //вывод значений на форму
-        let inpt = document.getElementById(row + '_' + col)
-        inpt.value = numerics[i]
-        col++
-    }
-    //console.log('OK: ' + dataFile)
-    //console.log(data)
-})
+mainProcess.openFile()
+
+    ipc.on('file-opened', (event, file) => {
+        //чтение из файла
+        fs.readFile(file, 'utf8', function(err, data) {
+            if (err) throw err;
+            let numerics = data.split(' ')
+            let row = 0
+            let col = 0
+            for (let i = 0; i < numerics.length; i++) {
+                if(i >= matrSize && (i%matrSize) == 0){
+                    //console.log('i = ' + i)
+                    row++
+                    col = 0
+                }
+                //console.log(row + '_' + col)
+                //вывод значений на форму
+                let inpt = document.getElementById(row + '_' + col)
+                inpt.value = numerics[i]
+                col++
+            }
+            //console.log('OK: ' + dataFile)
+            //console.log(data)
+        })
+    })
 
 })
 

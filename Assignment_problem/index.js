@@ -4,6 +4,8 @@
 const electron = require('electron')
 const {app, BrowserWindow} = electron
 const path = require('path')
+const dialog = electron.dialog
+const fs = require('fs')
 
 let win = null
 
@@ -22,3 +24,20 @@ win.on('closed', () => {
     win = null;
 })
 })
+
+function openFile() {
+    const files = dialog.showOpenDialog(win, {
+        properties: ['openFile'],
+        filters: [
+            {name: 'Markdown Files', extensions: ['md', 'markdown', 'txt']}
+        ]
+    })
+
+    if (!files) return
+
+    const file = files[0]
+
+    win.webContents.send('file-opened', file)
+}
+
+exports.openFile = openFile
