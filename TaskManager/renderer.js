@@ -296,12 +296,12 @@ $btnCreate.addEventListener('click', () => {
     content = fs.readFileSync(file)
     json = JSON.parse(content)
 
-    //TODO: create_date
+    let data = new Date();
     //add new element to tasks.json
     json.push({"id":div.id,
         "name":"Новая задача",
         "description":null,
-        "create_date":null,
+        "create_date":data.toLocaleDateString(),
         "finish_date":null,
         "plan_time":null,
         "fact_time":null})
@@ -318,7 +318,6 @@ $btnCreate.addEventListener('click', () => {
         setDataToRightSide(div)
     })
 
-    //TODO: синхронизация переноса данных в правую часть и сохранения в файл
     div.click()
 })
 

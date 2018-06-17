@@ -169,6 +169,7 @@ section{
     font-size: medium;
     font-weight: normal;
     color: black;
+    overflow-y: scroll;
 }
 .col-sm-4 {
     background: #777;

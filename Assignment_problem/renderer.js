@@ -136,6 +136,13 @@ $calcBtn.addEventListener('click', () => {
         }
     }
 
+    for(let row = 0; row<matrSize; row++){
+        for(let col=0; col<matrSize; col++){
+            let inpt = document.getElementById(row + '_' + col)
+            inpt.style = 'background-color: #FFF'
+        }
+    }
+
     //присвоение максимального значений
     for (let i=0; i<matrSize; i++)
     {

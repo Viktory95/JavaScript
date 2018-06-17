@@ -8,9 +8,9 @@
     "package": "",
     "build": "electron-packager . Assignment_problem"
   },
-  "author": "",
+  "author": "Vi",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "asar": "^0.13.0",
     "electron": "^1.6.11",
     "electron-packager": "^8.7.2",
